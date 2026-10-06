@@ -1,4 +1,4 @@
-_# MeetMind: AI Meeting & Lecture Intelligence System
+# MeetMind: AI Meeting & Lecture Intelligence System
 
 NLP project: BE-Aiml
 Neha Vengurlekar -- 224A9069
