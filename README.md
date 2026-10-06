@@ -1,4 +1,10 @@
-# MeetMind: AI Meeting & Lecture Intelligence System
+_# MeetMind: AI Meeting & Lecture Intelligence System
+
+NLP project: BE-Aiml
+Neha Vengurlekar -- 224A9069
+Srushti Dhotare -- 224A9065
+Shravani Bhosale -- 123A9050
+Om Revankar -- 123A9038
 
 MeetMind turns a meeting or lecture (audio or transcript) into a structured record:
 **who promised what, what was decided, and what is still open**, with every item linked
@@ -33,19 +39,6 @@ pip install -r requirements-audio.txt
 This adds faster-whisper (speech-to-text). The first audio upload downloads the
 Whisper "base" model (~150 MB).
 
-## Demo flow for the viva
-
-1. Open the app and click the sample **Project kickoff**, then **Analyse meeting**.
-   Show the highlighted transcript, action items with owner / deadline / priority,
-   decisions, open questions, chapters and the Insights tab.
-2. Click any action item: the transcript jumps to the exact line and flashes it
-   (with audio, the player jumps to that second).
-3. Go back and analyse the sample **Weekly sync**. Open the *Action items* tab:
-   MeetMind has matched last week's tasks against this meeting and marked
-   3 as **done** and 2 as **still open**, with the quote that proves it.
-4. Open the **Tasks** page: the cross-meeting board shows carried-over, open and done tasks.
-5. Analyse **NLP lecture** to show it also works on lectures (key terms, chapters, assignments).
-6. Toggle dark mode, and use **Download minutes** to export Markdown minutes.
 
 To reset everything, stop the app and delete `data/meetmind.db`.
 
@@ -99,14 +92,7 @@ meetmind/
 
 Interactive API docs: http://localhost:8000/docs
 
-## Known limitations (say these upfront)
-- Uploaded **audio** is transcribed without speaker separation, so it is labelled "Speaker".
-  For named speakers, use a transcript exported from Zoom / Teams / Meet, or add
-  speaker diarization with `pyannote.audio` as future work.
-- Action-item detection is rule-based, so unusual phrasing can be missed. A future
-  version could train a classifier on labelled meeting sentences (e.g. the AMI corpus).
-- English only.
-
 ## Future scope
 Speaker diarization (pyannote), Hindi/Marathi transcripts (IndicTrans2), abstractive
 summaries with a transformer model, live transcription during a call, calendar reminders.
+_
