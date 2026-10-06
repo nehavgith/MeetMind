@@ -1,0 +1,21 @@
+[00:00:05] Priya: Good morning everyone. Let's start the kickoff for the campus canteen ordering app. The goal today is to fix the scope, the tech stack and the first deadlines.
+[00:00:21] Rahul: Before we start, I looked at what the canteen staff actually need. Their biggest problem is the rush at lunch, orders get mixed up and students wait twenty minutes in the queue.
+[00:00:40] Priya: Right, so the core feature is pre-ordering with a pickup time slot. Students order from their phone and just collect the food.
+[00:00:55] Arjun: For the frontend I would suggest React Native so we get both Android and iPhone from one codebase. For the backend Firebase would be the fastest to set up.
+[00:01:14] Sneha: Firebase is quick, but our faculty guide wants us to show database design in the report. A relational database would look better for that.
+[00:01:30] Priya: Good point. After the discussion we have decided to use React Native for the app and a FastAPI backend with PostgreSQL.
+[00:01:45] Rahul: Agreed. That also lets us write proper SQL queries for the analytics part.
+[00:02:02] Priya: Now payments. Do we integrate UPI in the first version or keep it cash on pickup?
+[00:02:15] Arjun: I'm not sure the canteen even has a merchant account. We still need to figure out whether UPI is allowed on campus.
+[00:02:30] Sneha: Let's revisit payments next week once we talk to the canteen manager.
+[00:02:44] Priya: Fine. Rahul, can you meet the canteen manager by Thursday and ask about the merchant account and the daily order volume?
+[00:02:58] Rahul: Sure, I will meet him on Thursday and share the notes in the group.
+[00:03:10] Priya: Arjun will set up the React Native project and the login screen by Monday.
+[00:03:22] Arjun: Yes, I'll also create the GitHub repository today and add everyone.
+[00:03:35] Sneha: I will design the database schema for menu, orders and time slots and send it for review by Saturday.
+[00:03:50] Priya: Great. And I need to prepare the project synopsis for the faculty guide, it is urgent, the submission closes tomorrow.
+[00:04:05] Rahul: One more thing, how do we handle food that runs out in the middle of lunch? Should the app block orders automatically?
+[00:04:20] Sneha: That depends on whether the staff will update stock in the app. It's an open question for now.
+[00:04:33] Priya: Okay, we will go with a simple available or sold out toggle that the staff can press. That is the final decision for version one.
+[00:04:48] Arjun: Makes sense, that is easy to build.
+[00:05:00] Priya: Alright, so to summarise, React Native app, FastAPI with PostgreSQL, sold out toggle, and payments are parked until we hear from the canteen. Thanks everyone, same time next week.

@@ -1,0 +1,14 @@
+[00:00:04] Priya: Hi all, this is our first weekly sync on the canteen app. Let's go through last week's tasks first.
+[00:00:15] Priya: I submitted the project synopsis to the faculty guide, so that one is done, and she approved the topic.
+[00:00:30] Rahul: I met the canteen manager on Thursday and shared the notes in the group. They do have a merchant account, so UPI payments are possible.
+[00:00:47] Arjun: The GitHub repository is created and everyone has access. But the React Native login screen is not finished yet, the OTP library kept crashing on Android.
+[00:01:05] Priya: Okay, so the login screen carries over. Arjun, can you finish the login screen by Wednesday?
+[00:01:16] Arjun: Yes, I will finish it by Wednesday, I'm switching to Firebase phone authentication just for OTP.
+[00:01:30] Sneha: I'm still working on the database schema, I added time slots but the menu and orders tables need one more round.
+[00:01:45] Priya: Since UPI is possible, we have decided to integrate Razorpay test mode for payments in version one.
+[00:02:00] Rahul: I can take that. I will build the Razorpay test payment flow by next Friday.
+[00:02:14] Sneha: Should we show the estimated waiting time on the order screen? Students would really like that, but I'm not sure how we calculate it.
+[00:02:30] Priya: Let's park that for now, it is a nice to have.
+[00:02:41] Arjun: Also we need some test data. Sneha, could you add sample menu items with prices to the database by Monday?
+[00:02:55] Sneha: Sure, I'll add around thirty menu items by Monday.
+[00:03:08] Priya: Good progress everyone. Next sync same time next week.

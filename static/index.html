@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MeetMind</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%232B4ACB'/><rect x='7' y='13' width='18' height='7' rx='2' fill='%23FFE45C'/></svg>">
+<style>
+:root{
+  --bg:#E8ECF2; --surface:#FFFFFF; --sunken:#F3F5F9; --ink:#1A2440; --muted:#5B6782; --line:#D5DBE6;
+  --accent:#2B4ACB; --accent-ink:#FFFFFF;
+  --hl-action:#FFE45C; --hl-decision:#A6EBC0; --hl-question:#FFC2DA; --hl-tldr:#CFE0FF;
+  --radius-lg:18px; --radius:10px; --radius-sm:6px;
+  --shadow:0 1px 0 rgba(26,36,64,.06), 0 8px 24px -12px rgba(26,36,64,.18);
+  --font-display:"Bricolage Grotesque", system-ui, sans-serif;
+  --font-body:"Atkinson Hyperlegible", system-ui, sans-serif;
+}
+:root[data-theme="dark"]{
+  --bg:#121826; --surface:#1A2233; --sunken:#151C2B; --ink:#E7ECF5; --muted:#97A3BC; --line:#2A354B;
+  --accent:#7D95FF; --accent-ink:#0F1524;
+  --hl-action:rgba(255,228,92,.32); --hl-decision:rgba(120,224,160,.28); --hl-question:rgba(255,140,190,.28); --hl-tldr:rgba(125,149,255,.28);
+  --shadow:0 1px 0 rgba(0,0,0,.3), 0 10px 28px -14px rgba(0,0,0,.6);
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg); color:var(--ink); font:16px/1.55 var(--font-body); -webkit-font-smoothing:antialiased; min-height:100vh}
+h1,h2,h3{font-family:var(--font-display); line-height:1.15; margin:0; letter-spacing:-.01em}
+button,input,textarea{font:inherit; color:inherit}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--accent); outline-offset:2px; border-radius:4px}
+.num{font-variant-numeric:tabular-nums}
+
+/* top bar */
+.top{position:sticky; top:0; z-index:20; background:color-mix(in srgb,var(--bg) 88%,transparent); backdrop-filter:blur(10px); border-bottom:1px solid var(--line)}
+.top-in{max-width:1240px; margin:0 auto; padding:12px 20px; display:flex; align-items:center; gap:22px}
+.brand{display:flex; align-items:center; gap:10px; text-decoration:none; font-family:var(--font-display); font-weight:800; font-size:22px}
+.brand-mark{width:30px; height:30px; border-radius:8px; background:var(--accent); display:grid; place-items:center}
+.brand-mark i{display:block; width:17px; height:7px; border-radius:2px; background:var(--hl-action)}
+:root[data-theme="dark"] .brand-mark i{background:#FFE45C}
+.nav{display:flex; gap:4px; margin-left:8px}
+.nav a{text-decoration:none; padding:7px 12px; border-radius:999px; color:var(--muted); font-weight:700}
+.nav a.on{background:var(--surface); color:var(--ink); box-shadow:var(--shadow)}
+.spacer{flex:1}
+.icon-btn{background:none; border:1px solid var(--line); border-radius:999px; width:38px; height:38px; display:grid; place-items:center; cursor:pointer; color:var(--muted)}
+.btn{border:0; background:var(--accent); color:var(--accent-ink); font-weight:700; padding:10px 18px; border-radius:999px; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; gap:8px}
+.btn:disabled{opacity:.6; cursor:progress}
+.btn.ghost{background:transparent; color:var(--ink); border:1px solid var(--line)}
+
+main{max-width:1240px; margin:0 auto; padding:28px 20px 80px}
+.panel{background:var(--surface); border-radius:var(--radius-lg); box-shadow:var(--shadow)}
+
+/* home */
+.home{display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,1fr); gap:28px; align-items:start}
+.hero h1{font-size:clamp(34px,4.6vw,56px); font-weight:800; max-width:14ch}
+.hero h1 .mark{background:linear-gradient(transparent 12%, var(--hl-action) 12%, var(--hl-action) 88%, transparent 88%); padding:0 .12em; border-radius:4px; box-decoration-break:clone; -webkit-box-decoration-break:clone; background-size:0% 100%; background-repeat:no-repeat; animation:swipe 900ms 250ms cubic-bezier(.6,.1,.2,1) forwards}
+@keyframes swipe{to{background-size:100% 100%}}
+@media (prefers-reduced-motion:reduce){.hero h1 .mark{animation:none; background-size:100% 100%}}
+.hero p{color:var(--muted); max-width:52ch; font-size:18px; margin:14px 0 26px}
+.composer{padding:22px}
+.field{display:block; margin-bottom:14px}
+.field span{display:block; font-weight:700; font-size:14px; margin-bottom:6px}
+.input{width:100%; border:1px solid var(--line); background:var(--sunken); border-radius:var(--radius); padding:11px 13px}
+textarea.input{min-height:210px; resize:vertical; line-height:1.5}
+.drop{border:2px dashed var(--line); border-radius:var(--radius); padding:16px; text-align:center; color:var(--muted); cursor:pointer; margin-bottom:14px}
+.drop.over{border-color:var(--accent); color:var(--accent)}
+.drop b{color:var(--ink)}
+.samples{display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-bottom:18px; font-size:14px; color:var(--muted)}
+.chip{border:1px solid var(--line); background:var(--surface); border-radius:999px; padding:5px 12px; cursor:pointer; font-size:14px}
+.chip:hover{border-color:var(--accent)}
+.err{color:#C2264B; font-weight:700; margin:8px 0 0}
+:root[data-theme="dark"] .err{color:#FF8FB0}
+
+.list h2{font-size:22px; margin-bottom:12px}
+.mcard{display:block; text-decoration:none; padding:16px 18px; margin-bottom:12px}
+.mcard h3{font-size:19px}
+.mcard .meta{color:var(--muted); font-size:14px; margin:4px 0 8px}
+.mcard .gist{font-size:15px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden}
+.mcard .counts{display:flex; gap:8px; margin-top:10px}
+.pill{font-size:13px; font-weight:700; padding:3px 10px; border-radius:999px; background:var(--sunken)}
+.pill.y{background:var(--hl-action)} .pill.g{background:var(--hl-decision)} .pill.p{background:var(--hl-question)}
+.empty{padding:28px; text-align:center; color:var(--muted)}
+
+/* meeting */
+.mhead{display:flex; flex-wrap:wrap; gap:16px; align-items:flex-end; margin-bottom:18px}
+.mhead h1{font-size:clamp(28px,3.4vw,40px); font-weight:800}
+.mhead .meta{color:var(--muted)}
+.legend{display:flex; gap:14px; flex-wrap:wrap; font-size:14px; color:var(--muted); margin:-6px 0 18px}
+.legend span::before{content:""; display:inline-block; width:22px; height:10px; border-radius:3px; margin-right:6px; vertical-align:middle; background:var(--c)}
+.audio{width:100%; margin-bottom:16px}
+.split{display:grid; grid-template-columns:minmax(0,1.25fr) minmax(0,1fr); gap:22px; align-items:start}
+.transcript{padding:8px 0; max-height:calc(100vh - 230px); overflow:auto; scroll-behavior:smooth}
+.seg{display:grid; grid-template-columns:62px 1fr; gap:4px 12px; padding:12px 20px; border-left:4px solid transparent; transition:background .4s}
+.seg.flash{background:var(--sunken); border-left-color:var(--accent)}
+.seg .ts{grid-row:span 2; align-self:start; padding-top:1px; color:var(--muted); font-size:13px; background:none; border:0; text-align:left; cursor:pointer}
+.seg .ts:hover{color:var(--accent)}
+.seg .who{font-weight:700; font-size:14px; color:var(--sp)}
+.seg .txt{margin:0}
+mark{color:inherit; border-radius:3px; padding:1px 2px; box-decoration-break:clone; -webkit-box-decoration-break:clone}
+mark.action{background:var(--hl-action)} mark.decision{background:var(--hl-decision)} mark.question{background:var(--hl-question)}
+
+.side{position:sticky; top:84px}
+.tabs{display:flex; flex-wrap:wrap; gap:4px; padding:8px; border-bottom:1px solid var(--line)}
+.tab{border:0; background:none; padding:8px 12px; border-radius:999px; font-weight:700; color:var(--muted); cursor:pointer; white-space:nowrap}
+.tab.on{background:var(--ink); color:var(--surface)}
+.tab .n{font-size:12px; opacity:.75; margin-left:4px}
+.tabbody{padding:16px 18px 20px; max-height:calc(100vh - 290px); overflow:auto}
+.item{display:block; width:100%; text-align:left; background:var(--sunken); border:0; border-radius:var(--radius); padding:12px 14px; margin-bottom:10px; cursor:pointer; border-left:5px solid var(--bar,var(--line))}
+.item:hover{outline:1px solid var(--line)}
+.item .t{font-weight:700}
+.item .q{color:var(--muted); font-size:14px; margin-top:4px}
+.item .row{display:flex; flex-wrap:wrap; gap:6px 12px; font-size:13px; color:var(--muted); margin-top:8px; align-items:center}
+.item .who{color:var(--ink); font-weight:700}
+.jump{margin-left:auto; color:var(--accent); font-weight:700}
+.prio{font-weight:700; padding:1px 8px; border-radius:999px; font-size:12px; border:1px solid var(--line)}
+.prio.High{background:#C2264B; color:#fff; border-color:#C2264B}
+.sub{font-family:var(--font-display); font-size:16px; font-weight:700; margin:6px 0 10px}
+.follow{background:var(--surface); border:1px solid var(--line)}
+.tag{font-size:12px; font-weight:700; padding:2px 9px; border-radius:999px}
+.tag.completed{background:var(--hl-decision)} .tag.carried{background:var(--hl-question)}
+.tldr li{margin-bottom:10px} .tldr{padding-left:20px; margin:0}
+.kw{display:flex; flex-wrap:wrap; gap:8px}
+.kw span{background:var(--sunken); border-radius:999px; padding:5px 12px; font-size:var(--fs)}
+.bar{height:10px; border-radius:99px; background:var(--sunken); overflow:hidden; margin:4px 0 12px}
+.bar i{display:block; height:100%; background:var(--sp)}
+.chap{display:flex; gap:12px; align-items:baseline}
+.chap .ts{color:var(--muted); font-size:13px; min-width:44px}
+.stats{display:flex; gap:20px; flex-wrap:wrap; color:var(--muted); font-size:14px}
+.stats b{color:var(--ink); font-size:18px; font-family:var(--font-display)}
+
+/* tasks board */
+.board-head{display:flex; align-items:flex-end; gap:20px; flex-wrap:wrap; margin-bottom:20px}
+.board-head h1{font-size:clamp(28px,3.4vw,40px); font-weight:800}
+.kpis .big{color:var(--ink); font-family:var(--font-display); font-weight:800; font-size:34px; line-height:1}
+.kpis{display:flex; gap:26px; margin-left:auto}
+.kpis div{color:var(--muted); font-size:14px}
+.board{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:18px; align-items:start}
+.col{padding:16px}
+.col h2{font-size:18px; margin-bottom:12px; display:flex; justify-content:space-between}
+.task{background:var(--sunken); border-radius:var(--radius); padding:12px; margin-bottom:10px; display:grid; grid-template-columns:auto 1fr; gap:10px}
+.task input{width:20px; height:20px; accent-color:var(--accent); margin-top:2px}
+.task .t{font-weight:700}
+.task.done .t{text-decoration:line-through; color:var(--muted)}
+.task .row{font-size:13px; color:var(--muted); display:flex; gap:10px; flex-wrap:wrap; margin-top:4px}
+.task .from{text-decoration:underline; text-underline-offset:2px}
+
+.loading{display:flex; align-items:center; gap:10px; color:var(--muted)}
+.spin{width:18px; height:18px; border:3px solid var(--line); border-top-color:var(--accent); border-radius:50%; animation:sp .8s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+@media (max-width:900px){
+  .home,.split,.board{grid-template-columns:minmax(0,1fr)}
+  .side{position:static}
+  .transcript,.tabbody{max-height:none}
+  .kpis{margin-left:0}
+  .nav{margin-left:0}
+}
+@media (max-width:520px){
+  .top-in{gap:10px; padding:10px 16px}
+  .brand > span:last-child{display:none}
+  .top .btn{display:none}
+  main{padding:20px 16px 60px}
+  .seg{grid-template-columns:48px 1fr; padding:10px 14px}
+}
+</style>
+</head>
+<body>
+<header class="top"><div class="top-in">
+  <a class="brand" href="#/"><span class="brand-mark"><i></i></span><span>MeetMind</span></a>
+  <nav class="nav"><a href="#/" data-nav="home">Meetings</a><a href="#/tasks" data-nav="tasks">Tasks</a></nav>
+  <div class="spacer"></div>
+  <button class="icon-btn" id="theme" aria-label="Toggle dark mode" title="Toggle dark mode">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+  </button>
+  <a class="btn" href="#/">New meeting</a>
+</div></header>
+<main id="app"></main>
+
+<script>
+const $ = (s, el=document) => el.querySelector(s);
+const app = $("#app");
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const fmt = s => { s = Math.max(0, s|0); const h = s/3600|0, m = (s%3600)/60|0, x = s%60; return (h ? h+":"+String(m).padStart(2,"0") : m) + ":" + String(x).padStart(2,"0"); };
+const api = async (url, opts) => { const r = await fetch(url, opts); const j = await r.json().catch(() => ({})); if (!r.ok) throw new Error(j.detail || "Request failed"); return j; };
+const SPEAKER_COLORS = ["#2B4ACB","#C2410C","#0F766E","#9333EA","#B91C1C","#4D7C0F","#0369A1","#A16207"];
+const SPEAKER_COLORS_DARK = ["#8EA2FF","#FDBA74","#5EEAD4","#D8B4FE","#FCA5A5","#BEF264","#7DD3FC","#FDE68A"];
+const spColor = (name, list) => { const i = list.indexOf(name); const pal = document.documentElement.dataset.theme === "dark" ? SPEAKER_COLORS_DARK : SPEAKER_COLORS; return pal[(i < 0 ? 0 : i) % pal.length]; };
+
+/* theme */
+const savedTheme = (() => { try { return localStorage.getItem("mm-theme"); } catch { return null; } })();
+document.documentElement.dataset.theme = savedTheme || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+$("#theme").onclick = () => {
+  const t = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+  document.documentElement.dataset.theme = t;
+  try { localStorage.setItem("mm-theme", t); } catch {}
+  route();
+};
+
+/* router */
+window.addEventListener("hashchange", route);
+function route() {
+  app.onclick = null;
+  const h = location.hash || "#/";
+  document.querySelectorAll("[data-nav]").forEach(a => a.classList.toggle("on",
+    (a.dataset.nav === "tasks" && h.startsWith("#/tasks")) || (a.dataset.nav === "home" && (h === "#/" || h.startsWith("#/m/")))));
+  const m = h.match(/^#\/m\/(\d+)/);
+  if (m) return viewMeeting(+m[1]);
+  if (h.startsWith("#/tasks")) return viewTasks();
+  viewHome();
+}
+
+/* ---------- home ---------- */
+async function viewHome() {
+  app.innerHTML = `
+  <div class="home">
+    <section>
+      <div class="hero">
+        <h1>Every meeting, <span class="mark">turned into a to-do list.</span></h1>
+        <p>Drop in a recording or a transcript. MeetMind finds who promised what, what was decided, and what is still open, with a link back to the exact moment it was said.</p>
+      </div>
+      <form class="panel composer" id="form">
+        <label class="field"><span>Meeting name</span><input class="input" name="title" placeholder="e.g. Sprint planning, week 3" required></label>
+        <div class="drop" id="drop" tabindex="0" role="button" aria-label="Choose a file">
+          <b>Drop audio or a transcript here</b>, or click to choose.<br>
+          <small>.mp3 .wav .m4a for audio · .txt .vtt for Zoom, Teams or Meet transcripts</small>
+          <input type="file" id="file" hidden accept=".mp3,.wav,.m4a,.ogg,.webm,.mp4,.flac,.txt,.vtt">
+        </div>
+        <label class="field"><span>Or paste the transcript</span>
+          <textarea class="input" name="text" placeholder="[00:00:05] Priya: Let's start with the deadlines.&#10;[00:00:12] Rahul: I will send the report by Friday."></textarea></label>
+        <div class="samples" id="samples">Try a sample:</div>
+        <button class="btn" id="go" type="submit">Analyse meeting</button>
+        <p class="err" id="err" hidden></p>
+      </form>
+    </section>
+    <section class="list"><h2>Past meetings</h2><div id="mlist"><div class="loading"><div class="spin"></div>Loading</div></div></section>
+  </div>`;
+
+  let file = null;
+  const drop = $("#drop"), fin = $("#file"), form = $("#form");
+  const setFile = f => { file = f; drop.innerHTML = `<b>${esc(f.name)}</b> is ready. <u>Choose another</u>`; drop.appendChild(fin);
+    if (!form.title.value) form.title.value = f.name.replace(/\.[^.]+$/, "").replace(/[_-]+/g, " "); };
+  drop.onclick = () => fin.click();
+  drop.onkeydown = e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); fin.click(); } };
+  fin.onchange = () => fin.files[0] && setFile(fin.files[0]);
+  drop.ondragover = e => { e.preventDefault(); drop.classList.add("over"); };
+  drop.ondragleave = () => drop.classList.remove("over");
+  drop.ondrop = e => { e.preventDefault(); drop.classList.remove("over"); e.dataTransfer.files[0] && setFile(e.dataTransfer.files[0]); };
+
+  api("/api/samples").then(list => list.forEach(s => {
+    const b = document.createElement("button"); b.type = "button"; b.className = "chip"; b.textContent = s.name.replace(/^\d+\s*/, "");
+    b.onclick = () => { form.title.value = b.textContent; form.text.value = s.text; file = null; };
+    $("#samples").appendChild(b);
+  }));
+
+  form.onsubmit = async e => {
+    e.preventDefault();
+    const fd = new FormData(); fd.append("title", form.title.value); fd.append("text", form.text.value);
+    if (file) fd.append("file", file);
+    if (!file && !form.text.value.trim()) return showErr("Add a file or paste a transcript first.");
+    const go = $("#go"); go.disabled = true; go.innerHTML = `<span class="spin" style="border-top-color:#fff"></span> Analysing`;
+    try { const r = await api("/api/meetings", { method: "POST", body: fd }); location.hash = "#/m/" + r.id; }
+    catch (err) { showErr(err.message); go.disabled = false; go.textContent = "Analyse meeting"; }
+  };
+  const showErr = m => { const el = $("#err"); el.textContent = m; el.hidden = false; };
+
+  const ms = await api("/api/meetings");
+  $("#mlist").innerHTML = ms.length ? ms.map(m => `
+    <a class="panel mcard" href="#/m/${m.id}">
+      <h3>${esc(m.title)}</h3>
+      <div class="meta num">${esc(m.created.replace("T", ", "))} · ${fmt(m.stats.duration)} · ${m.speakers.length} speaker${m.speakers.length > 1 ? "s" : ""}</div>
+      <div class="gist">${esc(m.tldr)}</div>
+      <div class="counts"><span class="pill y num">${m.pending} open task${m.pending === 1 ? "" : "s"}</span><span class="pill g num">${m.done} done</span></div>
+    </a>`).join("") : `<div class="panel empty">No meetings yet. Analyse one on the left and it will show up here.</div>`;
+}
+
+/* ---------- meeting ---------- */
+async function viewMeeting(id) {
+  app.innerHTML = `<div class="loading"><div class="spin"></div>Loading meeting</div>`;
+  let m; try { m = await api("/api/meetings/" + id); } catch (e) { app.innerHTML = `<div class="panel empty">${esc(e.message)}. <a href="#/">Back to meetings</a></div>`; return; }
+  const a = m.analysis, speakers = a.speakers.map(s => s.speaker);
+
+  // build highlight map: segment id -> [{quote, cls}]
+  const marks = {};
+  const add = (list, cls) => list.forEach(x => (marks[x.seg] ||= []).push({ q: x.quote || x.text, cls }));
+  add(a.actions, "action"); add(a.decisions, "decision"); add(a.questions, "question");
+  const highlight = seg => {
+    let html = esc(seg.text);
+    (marks[seg.id] || []).forEach(({ q, cls }) => { const e = esc(q); if (html.includes(e)) html = html.replace(e, `<mark class="${cls}">${e}</mark>`); });
+    return html;
+  };
+
+  const ev = (x, label = "Jump to moment") => `data-seg="${x.seg}" data-t="${x.start}"`;
+  const itemRow = x => `<div class="row"><span class="who" style="color:${spColor(x.speaker, speakers)}">${esc(x.speaker)}</span><span class="num">at ${fmt(x.start)}</span><span class="jump">Show in transcript</span></div>`;
+
+  const followHTML = m.followups.length ? `<div class="sub">Updates on earlier tasks</div>` + m.followups.map(f => `
+      <button class="item follow" ${ev(f.update)} style="--bar:${f.update.status === "completed" ? "var(--hl-decision)" : "var(--hl-question)"}">
+        <div class="row" style="margin:0 0 6px"><span class="tag ${f.update.status}">${f.update.status === "completed" ? "Marked done" : "Still open"}</span><span>from ${esc(f.mtitle)}</span></div>
+        <div class="t">${esc(f.task)}</div>
+        <div class="q">“${esc(f.update.quote)}”</div>${itemRow({ ...f.update, speaker: speakerOf(m, f.update.seg) })}
+      </button>`).join("") + `<div class="sub" style="margin-top:18px">New in this meeting</div>` : "";
+
+  const tabs = {
+    summary: { label: "Summary", html: `
+      <div class="stats num" style="margin-bottom:16px"><div><b>${fmt(a.stats.duration)}</b> long</div><div><b>${a.stats.words}</b> words</div><div><b>${a.stats.speakers}</b> speakers</div></div>
+      <div class="sub">Key points</div>
+      <ol class="tldr">${a.tldr.map(x => `<li><a href="#" ${ev(x)} style="text-decoration:none">${esc(x.text)}</a> <small style="color:var(--muted)">${esc(x.speaker)}</small></li>`).join("")}</ol>` },
+    actions: { label: "Action items", n: a.actions.length, html: followHTML + (a.actions.length ? m.tasks.map((t, i) => `
+      <button class="item" ${ev(t)} style="--bar:var(--hl-action)">
+        <div class="t">${esc(t.task)}</div>
+        <div class="row" style="margin-top:6px"><span>Owner <b style="color:var(--ink)">${esc(t.owner)}</b></span>${t.deadline ? `<span>Due <b style="color:var(--ink)">${esc(t.deadline)}</b></span>` : ""}<span class="prio ${t.priority}">${t.priority}</span></div>
+        <div class="q">“${esc(t.quote)}”</div>${itemRow({ ...t, speaker: a.actions[i]?.speaker || "" })}
+      </button>`).join("") : `<p class="empty">No action items found.</p>`) },
+    decisions: { label: "Decisions", n: a.decisions.length, html: a.decisions.length ? a.decisions.map(x => `
+      <button class="item" ${ev(x)} style="--bar:var(--hl-decision)"><div class="t">${esc(x.text)}</div>${itemRow(x)}</button>`).join("") : `<p class="empty">No decisions were recorded.</p>` },
+    questions: { label: "Open questions", n: a.questions.length, html: a.questions.length ? a.questions.map(x => `
+      <button class="item" ${ev(x)} style="--bar:var(--hl-question)"><div class="t">${esc(x.text)}</div>${itemRow(x)}</button>`).join("") : `<p class="empty">Nothing left open.</p>` },
+    chapters: { label: "Chapters", n: a.chapters.length, html: a.chapters.map(c => `
+      <button class="item" ${ev(c)}><div class="chap"><span class="ts num">${fmt(c.start)}</span><span class="t">${esc(c.title)}</span></div></button>`).join("") },
+    insights: { label: "Insights", html: `
+      <div class="sub">Who spoke how much</div>
+      ${a.speakers.map(s => `<div style="--sp:${spColor(s.speaker, speakers)}"><div style="display:flex;justify-content:space-between;font-size:14px"><b>${esc(s.speaker)}</b><span class="num">${s.share}% · ${s.words} words</span></div><div class="bar"><i style="width:${s.share}%"></i></div></div>`).join("")}
+      <div class="sub" style="margin-top:18px">Key terms</div>
+      <div class="kw">${a.keywords.map((k, i) => `<span style="--fs:${Math.max(13, 18 - i * .5)}px">${esc(k.term)}</span>`).join("")}</div>` },
+  };
+
+  app.innerHTML = `
+    <div class="mhead"><div><h1>${esc(m.title)}</h1><div class="meta num">${esc(m.created.replace("T", ", "))}</div></div>
+      <div class="spacer"></div><button class="btn ghost" id="export">Download minutes</button><button class="btn ghost" id="del">Delete</button></div>
+    <div class="legend"><span style="--c:var(--hl-action)">Action item</span><span style="--c:var(--hl-decision)">Decision</span><span style="--c:var(--hl-question)">Open question</span></div>
+    ${m.audio ? `<audio class="audio" id="player" controls src="/audio/${esc(m.audio)}"></audio>` : ""}
+    <div class="split">
+      <section class="panel transcript" id="tr" aria-label="Transcript">
+        ${m.segments.map(s => `<div class="seg" id="seg-${s.id}" style="--sp:${spColor(s.speaker, speakers)}">
+          <button class="ts num" data-t="${s.start}" data-seg="${s.id}" aria-label="Play from ${fmt(s.start)}">${fmt(s.start)}</button>
+          <div class="who">${esc(s.speaker)}</div><p class="txt">${highlight(s)}</p></div>`).join("")}
+      </section>
+      <aside class="panel side">
+        <div class="tabs" role="tablist">${Object.entries(tabs).map(([k, t]) => `<button class="tab" role="tab" data-tab="${k}">${t.label}${t.n != null ? `<span class="n num">${t.n}</span>` : ""}</button>`).join("")}</div>
+        <div class="tabbody" id="tb"></div>
+      </aside>
+    </div>`;
+
+  const setTab = k => { document.querySelectorAll(".tab").forEach(b => b.classList.toggle("on", b.dataset.tab === k)); $("#tb").innerHTML = tabs[k].html; };
+  document.querySelectorAll(".tab").forEach(b => b.onclick = () => setTab(b.dataset.tab));
+  setTab(m.followups.length ? "actions" : "summary");
+
+  // clickable evidence: jump the transcript and the audio to the exact moment
+  app.onclick = e => {
+    const el = e.target.closest("[data-seg]"); if (!el) return;
+    e.preventDefault();
+    const seg = $("#seg-" + el.dataset.seg);
+    if (seg) {
+      const tr = $("#tr"); tr.scrollTop = seg.offsetTop - tr.offsetTop - 40;
+      if (getComputedStyle(tr).overflow !== "auto") seg.scrollIntoView({ behavior: "smooth", block: "center" });
+      seg.classList.add("flash"); setTimeout(() => seg.classList.remove("flash"), 1800);
+    }
+    const p = $("#player"); if (p) { p.currentTime = +el.dataset.t; p.play(); }
+  };
+
+  $("#del").onclick = async () => { if (confirm("Delete this meeting and its tasks?")) { await api("/api/meetings/" + id, { method: "DELETE" }); location.hash = "#/"; } };
+  $("#export").onclick = () => {
+    const lines = [`# ${m.title}`, `_${m.created.replace("T", " ")}_`, "", "## Key points", ...a.tldr.map(x => `- ${x.text}`), "",
+      "## Action items", ...m.tasks.map(t => `- [ ] ${t.task} (owner: ${t.owner}${t.deadline ? ", due " + t.deadline : ""}, ${t.priority})`), "",
+      "## Decisions", ...a.decisions.map(x => `- ${x.text}`), "", "## Open questions", ...a.questions.map(x => `- ${x.text}`)];
+    const blob = new Blob([lines.join("\n")], { type: "text/markdown" });
+    const link = Object.assign(document.createElement("a"), { href: URL.createObjectURL(blob), download: m.title.replace(/\W+/g, "_") + "_minutes.md" });
+    link.click();
+  };
+}
+function speakerOf(m, seg) { return (m.segments.find(s => s.id === seg) || {}).speaker || ""; }
+
+/* ---------- tasks board ---------- */
+async function viewTasks() {
+  app.innerHTML = `<div class="loading"><div class="spin"></div>Loading tasks</div>`;
+  const ts = await api("/api/tasks");
+  const pending = ts.filter(t => t.status === "pending");
+  const overdue = pending.filter(t => t.carried > 0 || t.meetings_since >= 2);
+  const fresh = pending.filter(t => !overdue.includes(t));
+  const done = ts.filter(t => t.status === "done");
+  const card = t => `
+    <div class="task ${t.status === "done" ? "done" : ""}">
+      <input type="checkbox" data-id="${t.id}" ${t.status === "done" ? "checked" : ""} aria-label="Mark done">
+      <div><div class="t">${esc(t.task)}</div>
+        <div class="row"><span><b style="color:var(--ink)">${esc(t.owner)}</b></span>${t.deadline ? `<span>due ${esc(t.deadline)}</span>` : ""}${t.priority === "High" && t.status !== "done" ? `<span class="prio High">High</span>` : ""}</div>
+        <div class="row"><a class="from" href="#/m/${t.meeting_id}">${esc(t.mtitle)}</a>${t.carried ? `<span>raised again in ${t.carried} later meeting${t.carried > 1 ? "s" : ""}</span>` : t.status === "pending" && t.meetings_since ? `<span>${t.meetings_since} meeting${t.meetings_since > 1 ? "s" : ""} ago</span>` : ""}</div>
+      </div></div>`;
+  const col = (title, list, empty) => `<section class="panel col"><h2>${title}<span class="num" style="color:var(--muted)">${list.length}</span></h2>${list.length ? list.map(card).join("") : `<p class="empty">${empty}</p>`}</section>`;
+  app.innerHTML = `
+    <div class="board-head"><div><h1>Tasks across meetings</h1><p style="color:var(--muted);margin:6px 0 0">MeetMind checks each new meeting against older tasks and updates them for you.</p></div>
+      <div class="kpis num"><div><div class="big">${pending.length}</div>open</div><div><div class="big" style="color:#C2264B">${overdue.length}</div>carried over</div><div><div class="big">${done.length}</div>done</div></div></div>
+    <div class="board">
+      ${col("Carried over", overdue, "Nothing is slipping.")}
+      ${col("Open", fresh, "No new tasks.")}
+      ${col("Done", done, "Tick a task when it is finished.")}
+    </div>`;
+  app.querySelectorAll("input[data-id]").forEach(cb => cb.onchange = async () => {
+    await api("/api/tasks/" + cb.dataset.id, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ status: cb.checked ? "done" : "pending" }) });
+    viewTasks();
+  });
+}
+
+route();
+</script>
+</body>
+</html>

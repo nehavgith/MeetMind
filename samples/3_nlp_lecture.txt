@@ -1,0 +1,17 @@
+[00:00:03] Professor: Good morning class. Today we will cover named entity recognition, which is one of the most useful information extraction tasks in natural language processing.
+[00:00:20] Professor: Named entity recognition, or NER, means finding spans of text that refer to real world things like people, organisations, locations and dates, and labelling them with a type.
+[00:00:42] Professor: For example in the sentence Sundar Pichai visited Bengaluru in March, an NER system should tag Sundar Pichai as a person, Bengaluru as a location and March as a date.
+[00:01:05] Student: Sir, is it the same as part of speech tagging?
+[00:01:12] Professor: Good question. Part of speech tagging labels every single token with a grammatical category. NER labels only some spans and the labels are semantic categories, not grammatical ones.
+[00:01:35] Professor: The classic way to frame NER is as a sequence labelling problem using the BIO tagging scheme. B means the beginning of an entity, I means inside an entity, and O means outside any entity.
+[00:01:58] Professor: So Sundar gets B dash PER, Pichai gets I dash PER, and visited gets O.
+[00:02:15] Professor: Early systems used hand written rules and gazetteers, which are simply large lists of known names. They are precise but they break on new names.
+[00:02:36] Professor: Then came statistical models like hidden Markov models and conditional random fields. A conditional random field looks at features such as capitalisation, word shape, prefixes and suffixes, and the neighbouring labels.
+[00:03:00] Student: Which one is used today?
+[00:03:06] Professor: Today most systems use neural networks. First bidirectional LSTMs with a CRF layer on top, and now transformer models like BERT that are fine tuned on labelled data.
+[00:03:28] Professor: Transformers work well because the attention mechanism lets every word look at the whole sentence, so context like visited before a word helps decide that it is a location.
+[00:03:50] Professor: We evaluate NER using precision, recall and F1 score at the entity level. An entity counts as correct only if both the span boundaries and the type are exactly right.
+[00:04:12] Professor: Libraries like spaCy give you a pretrained NER model in one line of code, which is what you will use in the lab this week.
+[00:04:28] Professor: For the assignment you need to run spaCy NER on fifty news headlines and calculate the precision yourself. Please submit it by next Monday.
+[00:04:45] Student: Sir, will the BIO scheme come in the mid semester exam?
+[00:04:52] Professor: Yes, expect one question on BIO tagging and one on the difference between rule based and neural NER. That is all for today.
